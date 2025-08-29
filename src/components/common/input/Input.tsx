@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority'
+import type { StringToBoolean } from 'class-variance-authority/types'
 import clsx from 'clsx'
 import { Mail, Search } from 'lucide-react'
 
@@ -29,16 +30,25 @@ const errorMessageStyle = cva('text-sm', {
 })
 
 interface InputProps {
+  label: string
+  placeholder: string
+  isRequired?: boolean
   isError?: boolean
   icon?: string | null
 }
 
-function Input({ isError = false, icon }: InputProps) {
+function Input({
+  label = '라벨',
+  placeholder = '텍스트를 입력하세요',
+  isRequired = false,
+  isError = false,
+  icon,
+}: InputProps) {
   return (
     <label className="flex flex-col gap-2">
       <div className="flex gap-1 text-sm font-medium">
-        <span className="color-gray-700">이름</span>
-        <span className="text-danger-500">*</span>
+        <span className="color-gray-700">{label}</span>
+        {isRequired && <span className="text-danger-500">*</span>}
       </div>
 
       <div className="relative">
@@ -50,7 +60,7 @@ function Input({ isError = false, icon }: InputProps) {
         )}
         <input
           type="text"
-          placeholder="이름을 입력하세요"
+          placeholder={placeholder}
           className={clsx(
             inputStyle({ isError: isError, hasIcon: Boolean(icon) })
           )}
