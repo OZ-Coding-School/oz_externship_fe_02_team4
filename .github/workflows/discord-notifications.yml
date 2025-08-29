@@ -29,7 +29,7 @@ jobs:
                     },
                     {
                       "name": "🌿 브랜치",
-                      "value": "${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}",
+                      "value": "`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`",
                       "inline": true
                     },
                     {
@@ -69,6 +69,9 @@ jobs:
                 "Kwonyeojiny")
                   MENTIONS="$MENTIONS <@579296258091646976>"
                   ;;
+                "shin-minhyuk")
+                  MENTIONS="$MENTIONS <@1121074841102069814>"
+                  ;;
                 "sysysysyb")
                   MENTIONS="$MENTIONS <@950597490086924368>"
                   ;;
@@ -92,6 +95,7 @@ jobs:
               case "$CURRENT_REVIEWER" in
                 "chen4023") MENTIONS="<@683563560063991848>" ;;
                 "Kwonyeojiny") MENTIONS="<@579296258091646976>" ;;
+                "shin-minhyuk") MENTIONS="<@1121074841102069814>" ;;
                 "sysysysyb") MENTIONS="<@950597490086924368>" ;;
                 "dirage1") MENTIONS="<@1128168230540804258>" ;;
                 "Jaeeun0723") MENTIONS="<@478568545748254720>" ;;
@@ -177,6 +181,9 @@ jobs:
             "Kwonyeojiny")
                   AUTHOR_MENTION="<@579296258091646976>"
                   ;;
+            "shin-minhyuk")
+                  AUTHOR_MENTION="<@1121074841102069814>"
+                  ;;
             "sysysysyb")
                   AUTHOR_MENTION="<@950597490086924368>"
                   ;;
@@ -232,6 +239,9 @@ jobs:
                   ;;
             "Kwonyeojiny")
                   AUTHOR_MENTION="<@579296258091646976>"
+                  ;;
+            "shin-minhyuk")
+                  AUTHOR_MENTION="<@1121074841102069814>"
                   ;;
             "sysysysyb")
                   AUTHOR_MENTION="<@950597490086924368>"
