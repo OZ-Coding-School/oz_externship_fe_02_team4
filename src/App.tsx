@@ -1,5 +1,11 @@
+import Header from '@/components/header'
+
 function App() {
-  return <div>template</div>
+  return (
+    <>
+      <Header />
+    </>
+  )
 }
 
 export default App
