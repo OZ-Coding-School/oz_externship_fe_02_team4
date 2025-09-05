@@ -12,7 +12,10 @@ function AuthContainer({
 }: ComponentProps<'section'>) {
   return (
     <section
-      className={cn('w-112 rounded-lg bg-white px-6 py-8 shadow-sm', className)}
+      className={cn(
+        'w-112 rounded-lg bg-white px-6 py-12 shadow-md',
+        className
+      )}
       {...props}
     >
       {children}
