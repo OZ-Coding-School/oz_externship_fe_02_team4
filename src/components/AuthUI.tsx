@@ -61,20 +61,18 @@ function AuthLink({ path, className, children, ...props }: AuthLinkProps) {
   )
 }
 
-interface AuthButtonProps extends ComponentProps<'button'> {
-  isDisabled?: boolean
-}
-
 function AuthSubmitButton({
-  isDisabled,
   className,
   children,
   ...props
-}: AuthButtonProps) {
+}: ComponentProps<'button'>) {
   return (
     <Button
-      variant={isDisabled ? 'secondary' : 'primary'}
-      className={className}
+      variant="primary"
+      className={cn(
+        'w-full p-4 disabled:bg-[#ececec] disabled:text-[#303030] disabled:hover:bg-[#ececec]',
+        className
+      )}
       {...props}
     >
       {children}
@@ -83,19 +81,15 @@ function AuthSubmitButton({
 }
 
 function AuthVerifyButton({
-  isDisabled,
   className,
   children,
   ...props
-}: AuthButtonProps) {
+}: ComponentProps<'button'>) {
   return (
     <Button
-      variant="outline"
+      variant="primary"
       className={cn(
-        'border border-solid',
-        isDisabled
-          ? 'border-[#bdbdbd] bg-gray-200'
-          : 'bg-primary-100 border-primary-500 text-primary-500',
+        'active:bg-primary-300 bg-primary-100 hover:bg-primary-200 text-primary-500 ring-primary-500 ring disabled:bg-gray-200 disabled:text-[#303030] disabled:ring-[#303030]',
         className
       )}
       {...props}
@@ -109,9 +103,15 @@ function AuthSocialLoginButton({
   className,
   children,
   ...props
-}: AuthButtonProps) {
+}: ComponentProps<'button'>) {
   return (
-    <Button className={className} {...props}>
+    <Button
+      className={cn(
+        'flex w-full items-center justify-center gap-1 p-4',
+        className
+      )}
+      {...props}
+    >
       {children}
     </Button>
   )
