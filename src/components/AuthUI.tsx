@@ -55,7 +55,11 @@ interface AuthLinkProps extends ComponentProps<'a'> {
 
 function AuthLink({ path, className, children, ...props }: AuthLinkProps) {
   return (
-    <Link to={path} className={cn('text-primary-600', className)} {...props}>
+    <Link
+      to={path}
+      className={cn('text-primary-600 text-sm', className)}
+      {...props}
+    >
       {children}
     </Link>
   )
