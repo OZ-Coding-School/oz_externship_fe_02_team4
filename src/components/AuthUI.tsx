@@ -5,7 +5,11 @@ import Input from './common/Input'
 import type { ComponentProps } from 'react'
 import Badge from './common/Badge'
 
-function AuthContainer({ className, children, ...props }) {
+function AuthContainer({
+  className,
+  children,
+  ...props
+}: ComponentProps<'section'>) {
   return (
     <section
       className={cn('w-112 rounded-lg bg-white px-6 py-8 shadow-sm', className)}
@@ -16,7 +20,7 @@ function AuthContainer({ className, children, ...props }) {
   )
 }
 
-function AuthTitle({ className, children, ...props }) {
+function AuthTitle({ className, children, ...props }: ComponentProps<'h1'>) {
   return (
     <h1
       className={cn(
@@ -30,7 +34,11 @@ function AuthTitle({ className, children, ...props }) {
   )
 }
 
-function AuthDescription({ className, children, ...props }) {
+function AuthDescription({
+  className,
+  children,
+  ...props
+}: ComponentProps<'span'>) {
   return (
     <span
       className={cn('text-sm font-normal text-gray-600', className)}
@@ -41,7 +49,11 @@ function AuthDescription({ className, children, ...props }) {
   )
 }
 
-function AuthLink({ path, className, children, ...props }) {
+interface AuthLinkProps extends ComponentProps<'a'> {
+  path: string
+}
+
+function AuthLink({ path, className, children, ...props }: AuthLinkProps) {
   return (
     <Link to={path} className={cn('text-primary-600', className)} {...props}>
       {children}
@@ -49,7 +61,16 @@ function AuthLink({ path, className, children, ...props }) {
   )
 }
 
-function AuthSubmitButton({ isDisabled, className, children, ...props }) {
+interface AuthButtonProps extends ComponentProps<'button'> {
+  isDisabled?: boolean
+}
+
+function AuthSubmitButton({
+  isDisabled,
+  className,
+  children,
+  ...props
+}: AuthButtonProps) {
   return (
     <Button
       variant={isDisabled ? 'secondary' : 'primary'}
@@ -61,7 +82,12 @@ function AuthSubmitButton({ isDisabled, className, children, ...props }) {
   )
 }
 
-function AuthVerifyButton({ isDisabled, className, children, ...props }) {
+function AuthVerifyButton({
+  isDisabled,
+  className,
+  children,
+  ...props
+}: AuthButtonProps) {
   return (
     <Button
       variant="outline"
@@ -79,7 +105,11 @@ function AuthVerifyButton({ isDisabled, className, children, ...props }) {
   )
 }
 
-function AuthSocialLoginButton({ className, children, ...props }) {
+function AuthSocialLoginButton({
+  className,
+  children,
+  ...props
+}: AuthButtonProps) {
   return (
     <Button className={className} {...props}>
       {children}
@@ -91,7 +121,16 @@ function AuthInput({ className, ...props }: ComponentProps<'input'>) {
   return <Input className={className} {...props} />
 }
 
-function AuthBadge({ isSelected, className, children, ...props }) {
+interface AuthBadgeProps extends ComponentProps<'div'> {
+  isSelected?: boolean
+}
+
+function AuthBadge({
+  isSelected,
+  className,
+  children,
+  ...props
+}: AuthBadgeProps) {
   return (
     <Badge
       size="lg"
