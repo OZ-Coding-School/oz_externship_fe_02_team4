@@ -4,6 +4,7 @@ import { cn } from '@/utils'
 import Input from './common/Input'
 import type { ComponentProps } from 'react'
 import Badge from './common/Badge'
+import { Logo } from './common/Logo'
 
 function AuthContainer({
   className,
@@ -20,6 +21,17 @@ function AuthContainer({
     >
       {children}
     </section>
+  )
+}
+
+function AuthLogo({ className, ...props }: ComponentProps<'div'>) {
+  return (
+    <div className={cn('flex justify-center gap-2', className)} {...props}>
+      <div className="bg-primary-500 flex size-8 items-center justify-center rounded-lg text-base font-bold text-white">
+        S
+      </div>
+      <Logo />
+    </div>
   )
 }
 
@@ -157,6 +169,7 @@ function AuthBadge({
 
 export {
   AuthContainer,
+  AuthLogo,
   AuthTitle,
   AuthDescription,
   AuthLink,
