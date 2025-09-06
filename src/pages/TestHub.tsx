@@ -31,7 +31,7 @@ function TestHub() {
             ))}
         </div>
       </aside>
-      <main>
+      <main className="w-full overflow-auto p-20">
         <Suspense fallback={<div>Loading...</div>}>
           <Outlet />
         </Suspense>
