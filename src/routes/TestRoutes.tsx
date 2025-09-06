@@ -15,7 +15,13 @@ function TestRoutes() {
               key={p.key}
               path={p.route}
               element={
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense
+                  fallback={
+                    <div className="flex h-full items-center justify-center">
+                      Loading...
+                    </div>
+                  }
+                >
                   <Page />
                 </Suspense>
               }
