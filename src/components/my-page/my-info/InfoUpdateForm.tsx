@@ -15,6 +15,7 @@ import {
 } from '@/schemas/form-schema/info-update-schema'
 import { useVerificationCode } from '@/hooks'
 import { cn } from '@/utils'
+import { useEffect } from 'react'
 
 export const InfoUpdateForm = () => {
   const { data: userInfo } = useUserInformation()
@@ -30,17 +31,28 @@ export const InfoUpdateForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     getValues,
     setError,
+    reset,
   } = useForm<InfoUpdateType>({
     mode: 'onChange',
     resolver: zodResolver(InfoUpdateSchema),
     defaultValues: {
-      nickname: userInfo?.nickname ?? '',
-      phoneNumber: userInfo?.phoneNumber ?? '',
+      nickname: '',
+      phoneNumber: '',
     },
   })
+
+  // ✅ userInfo 들어오면 form 값 초기화
+  useEffect(() => {
+    if (userInfo) {
+      reset({
+        nickname: userInfo.nickname ?? '',
+        phoneNumber: userInfo.phoneNumber ?? '',
+      })
+    }
+  }, [userInfo, reset])
 
   const phoneNumber = getValues('phoneNumber')
 
@@ -53,6 +65,7 @@ export const InfoUpdateForm = () => {
     }
     handleCodeSend('phoneNumber', phoneNumber)
   }
+
   const handleVerifyButtonClick = () => {
     const verificationCode = getValues('infoUpdateVerificationCode')
     if (!verificationCode) {
@@ -148,14 +161,12 @@ export const InfoUpdateForm = () => {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
               <Input
-                disabled={!isCodeSent.phoneNumber}
                 id="infoUpdateVerificationCode"
                 {...register('infoUpdateVerificationCode')}
                 placeholder="인증코드 6자리 입력"
                 readOnly={isCodeVerified.phoneNumber}
                 className={cn(
-                  isCodeVerified.phoneNumber &&
-                    'disabled:bg-white disabled:text-black'
+                  isCodeVerified.phoneNumber && 'bg-gray-100 text-gray-500'
                 )}
               />
               <Button
@@ -184,7 +195,10 @@ export const InfoUpdateForm = () => {
         <Button
           variant="primary"
           type="submit"
-          disabled={!isValid || !isCodeVerified.phoneNumber}
+          // isValid 대신 에러 유무 + 인증 완료 여부로 체크
+          disabled={
+            Object.keys(errors).length > 0 || !isCodeVerified.phoneNumber
+          }
         >
           변경하기
         </Button>

@@ -16,7 +16,7 @@ export default function useUpdateUserInfo(
     ...options,
     mutationKey: ['user', 'update-info'],
     mutationFn: async ({ nickname, phoneNumber }) => {
-      return await api.put(`${API_BASE_URL}/users/me`, {
+      return await api.patch(`${API_BASE_URL}/info/edit`, {
         nickname,
         phone_number: phoneNumber,
       })
