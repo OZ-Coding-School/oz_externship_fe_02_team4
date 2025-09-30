@@ -36,6 +36,7 @@ export interface UserPhoneVerify {
 export interface UpdateUserInfoRequest {
   nickname: string
   phoneNumber: string
+  profileImageUrl: string
 }
 
 export interface UserKakaoLogin {

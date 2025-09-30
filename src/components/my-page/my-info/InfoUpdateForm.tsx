@@ -15,7 +15,8 @@ import {
 } from '@/schemas/form-schema/info-update-schema'
 import { useVerificationCode } from '@/hooks'
 import { cn } from '@/utils'
-import { useEffect } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
+import useImageUpload from '@/hooks/useImageUpload'
 
 export const InfoUpdateForm = () => {
   const { data: userInfo } = useUserInformation()
@@ -27,6 +28,8 @@ export const InfoUpdateForm = () => {
     handleCodeSend,
     handleCodeVerify,
   } = useVerificationCode()
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
 
   const {
     register,
@@ -44,13 +47,15 @@ export const InfoUpdateForm = () => {
     },
   })
 
-  // ✅ userInfo 들어오면 form 값 초기화
+  const { uploadImage } = useImageUpload()
+
   useEffect(() => {
     if (userInfo) {
       reset({
         nickname: userInfo.nickname ?? '',
         phoneNumber: userInfo.phoneNumber ?? '',
       })
+      setProfileImageUrl(userInfo.profileImageUrl ?? null)
     }
   }, [userInfo, reset])
 
@@ -85,6 +90,21 @@ export const InfoUpdateForm = () => {
       close()
     },
   })
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // 미리보기 업데이트
+    setPreviewImage(URL.createObjectURL(file))
+
+    // 업로드 -> url 받아오기
+    try {
+      const url = await uploadImage(file)
+      setProfileImageUrl(url)
+    } catch (err) {
+      setError('root', { message: '이미지 업로드에 실패했습니다' })
+    }
+  }
 
   // ✅ 최종 제출
   const onSubmit = (values: InfoUpdateType) => {
@@ -98,6 +118,7 @@ export const InfoUpdateForm = () => {
     updateUserInfo.mutate({
       nickname: values.nickname,
       phoneNumber: values.phoneNumber,
+      profileImageUrl: profileImageUrl ?? '',
     })
   }
 
@@ -108,11 +129,13 @@ export const InfoUpdateForm = () => {
       <ModalMain className="flex flex-col gap-6">
         {/* 프로필 이미지 */}
         <label className="flex cursor-pointer flex-col items-center gap-4">
-          <Avatar
-            size="3xl"
-            state="none"
-            src={userInfo.profileImageUrl ?? undefined}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
           />
+          <Avatar size="3xl" state="none" src={previewImage ?? undefined} />
           <span className="text-primary-600 text-sm">프로필 사진 변경</span>
         </label>
 
