@@ -13,7 +13,7 @@ export default function useUserInformation<T = UserInformation>(
     ...options,
     queryKey: ['info'],
     queryFn: async () => {
-      const response = await api.get(`${MSW_BASE_URL}/info/`)
+      const response = await api.get(`${MSW_BASE_URL}/info`)
       const data = response.data
 
       return {
