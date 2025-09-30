@@ -12,7 +12,7 @@ export default function useImageUpload() {
     try {
       setIsUploading(true)
       const res = await api.post<{ url: string }>(
-        `${API_BASE_URL}/upload/image`,
+        `${API_BASE_URL}/info/edit`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
