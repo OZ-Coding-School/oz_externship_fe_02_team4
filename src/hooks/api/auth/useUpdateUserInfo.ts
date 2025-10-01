@@ -15,11 +15,17 @@ export default function useUpdateUserInfo(
   return useMutation<unknown, AxiosError, UpdateUserInfoRequest>({
     ...options,
     mutationKey: ['user', 'update-info'],
-    mutationFn: async ({ nickname, phoneNumber, profileImageUrl }) => {
-      return await api.patch(`${API_BASE_URL}/info/edit`, {
+    mutationFn: async ({
+      nickname,
+      phoneNumber,
+      profileImageUrl,
+      verificationCode,
+    }) => {
+      return await api.patch(`${API_BASE_URL}/info/edit/`, {
         nickname,
         phone_number: phoneNumber,
         profile_image_url: profileImageUrl,
+        verification_code: verificationCode,
       })
     },
     onSuccess: async (_, __, context) => {
