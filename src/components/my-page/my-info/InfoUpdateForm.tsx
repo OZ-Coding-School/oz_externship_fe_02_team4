@@ -101,19 +101,13 @@ export const InfoUpdateForm = () => {
     try {
       const url = await uploadImage(file)
       setProfileImageUrl(url)
-    } catch (err) {
+    } catch {
       setError('root', { message: '이미지 업로드에 실패했습니다' })
     }
   }
 
   // ✅ 최종 제출
   const onSubmit = (values: InfoUpdateType) => {
-    console.log('제출 payload 확인 👉', {
-      nickname: values.nickname,
-      phoneNumber: values.phoneNumber,
-      verificationCode: values.infoUpdateVerificationCode,
-    })
-
     if (!isCodeVerified.phoneNumber) {
       setError('infoUpdateVerificationCode', {
         message: '휴대폰 번호 인증을 완료해주세요',
