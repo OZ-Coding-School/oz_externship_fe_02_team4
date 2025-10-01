@@ -15,6 +15,8 @@ import {
 } from '@/schemas/form-schema/info-update-schema'
 import { useVerificationCode } from '@/hooks'
 import { cn } from '@/utils'
+import { useEffect, useState, type ChangeEvent } from 'react'
+import useImageUpload from '@/hooks/useImageUpload'
 
 export const InfoUpdateForm = () => {
   const { data: userInfo } = useUserInformation()
@@ -26,21 +28,36 @@ export const InfoUpdateForm = () => {
     handleCodeSend,
     handleCodeVerify,
   } = useVerificationCode()
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     getValues,
     setError,
+    reset,
   } = useForm<InfoUpdateType>({
     mode: 'onChange',
     resolver: zodResolver(InfoUpdateSchema),
     defaultValues: {
-      nickname: userInfo?.nickname ?? '',
-      phoneNumber: userInfo?.phoneNumber ?? '',
+      nickname: '',
+      phoneNumber: '',
     },
   })
+
+  const { uploadImage } = useImageUpload()
+
+  useEffect(() => {
+    if (userInfo) {
+      reset({
+        nickname: userInfo.nickname ?? '',
+        phoneNumber: userInfo.phoneNumber ?? '',
+      })
+      setProfileImageUrl(userInfo.profileImageUrl ?? null)
+    }
+  }, [userInfo, reset])
 
   const phoneNumber = getValues('phoneNumber')
 
@@ -53,6 +70,7 @@ export const InfoUpdateForm = () => {
     }
     handleCodeSend('phoneNumber', phoneNumber)
   }
+
   const handleVerifyButtonClick = () => {
     const verificationCode = getValues('infoUpdateVerificationCode')
     if (!verificationCode) {
@@ -72,6 +90,21 @@ export const InfoUpdateForm = () => {
       close()
     },
   })
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // 미리보기 업데이트
+    setPreviewImage(URL.createObjectURL(file))
+
+    // 업로드 -> url 받아오기
+    try {
+      const url = await uploadImage(file)
+      setProfileImageUrl(url)
+    } catch {
+      setError('root', { message: '이미지 업로드에 실패했습니다' })
+    }
+  }
 
   // ✅ 최종 제출
   const onSubmit = (values: InfoUpdateType) => {
@@ -85,6 +118,8 @@ export const InfoUpdateForm = () => {
     updateUserInfo.mutate({
       nickname: values.nickname,
       phoneNumber: values.phoneNumber,
+      profileImageUrl: profileImageUrl ?? '',
+      verificationCode: values.infoUpdateVerificationCode,
     })
   }
 
@@ -95,11 +130,13 @@ export const InfoUpdateForm = () => {
       <ModalMain className="flex flex-col gap-6">
         {/* 프로필 이미지 */}
         <label className="flex cursor-pointer flex-col items-center gap-4">
-          <Avatar
-            size="3xl"
-            state="none"
-            src={userInfo.profileImageUrl ?? undefined}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
           />
+          <Avatar size="3xl" state="none" src={previewImage ?? undefined} />
           <span className="text-primary-600 text-sm">프로필 사진 변경</span>
         </label>
 
@@ -148,14 +185,12 @@ export const InfoUpdateForm = () => {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
               <Input
-                disabled={!isCodeSent.phoneNumber}
                 id="infoUpdateVerificationCode"
                 {...register('infoUpdateVerificationCode')}
                 placeholder="인증코드 6자리 입력"
                 readOnly={isCodeVerified.phoneNumber}
                 className={cn(
-                  isCodeVerified.phoneNumber &&
-                    'disabled:bg-white disabled:text-black'
+                  isCodeVerified.phoneNumber && 'bg-gray-100 text-gray-500'
                 )}
               />
               <Button
@@ -184,7 +219,11 @@ export const InfoUpdateForm = () => {
         <Button
           variant="primary"
           type="submit"
-          disabled={!isValid || !isCodeVerified.phoneNumber}
+          // isValid 대신 에러 유무 + 인증 완료 여부로 체크
+          disabled={
+            Object.keys(errors).filter((key) => key !== 'root').length > 0 ||
+            !isCodeVerified.phoneNumber
+          }
         >
           변경하기
         </Button>

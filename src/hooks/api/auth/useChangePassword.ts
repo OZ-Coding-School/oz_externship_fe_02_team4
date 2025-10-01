@@ -14,13 +14,7 @@ export default function useChangePassword(
     ...options,
     mutationKey: ['user'],
     mutationFn: async (payload) => {
-      const verifyResponse = await api.get(`${API_BASE_URL}/users/me`, {
-        params: { password: payload.currentPassword },
-      })
-      if (verifyResponse.data !== payload.currentPassword) {
-        throw new Error('현재 비밀번호가 올바르지 않습니다.')
-      }
-      return api.put(`${API_BASE_URL}/user`, {
+      await api.patch(`${API_BASE_URL}/info/edit/`, {
         password: payload.newPassword,
       })
     },
