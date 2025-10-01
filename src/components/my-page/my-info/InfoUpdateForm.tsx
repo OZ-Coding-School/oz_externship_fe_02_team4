@@ -221,7 +221,8 @@ export const InfoUpdateForm = () => {
           type="submit"
           // isValid 대신 에러 유무 + 인증 완료 여부로 체크
           disabled={
-            Object.keys(errors).length > 0 || !isCodeVerified.phoneNumber
+            Object.keys(errors).filter((key) => key !== 'root').length > 0 ||
+            !isCodeVerified.phoneNumber
           }
         >
           변경하기
